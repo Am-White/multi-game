@@ -1,62 +1,70 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect,} from 'react';
 import './main.css';
 import {
     Button,
-    TextField
 } from '@material-ui/core'
 
 function Home() {
-    //Generate 2 numbers between 1-10
-    function getRandomInt1(max) {
-        return Math.floor(Math.random() * max);
-      }
-      function getRandomInt2(max) {
-        return Math.floor(Math.random() * max);
-      }
-    const num1 = getRandomInt1(10);
-    const num2 = getRandomInt2(10);
-    const answer = num1 * num2;
 
-    // If input === num1 * num2 then add +1 to score
+    //display one question- if userInput matches answer = score +1
+    const [userInput, setInput] = useState('');
+    const [score, setScore] = useState(0);
 
-    //Score
-    // const userAnswer = [];
-     //const score = [];
-    //attempt 1
-    // function input (userAnswer, score) {
-    //     if (userAnswer === answer) {
-    //         return { score: +1
-    //         }
-    //     }
-    // }
+    // const RandomNumber = Math.floor(Math.random() * 10) + 1 ;
+    // const RandomNumber2 = Math.floor(Math.random() * 10) + 1 ;
+    const RandomNumber = 5;
+    const RandomNumber2 = 2;
+    const answer = RandomNumber * RandomNumber2;
 
-        //attempt 2
-        // const [score, setScore] = useState(1);
-        // useEffect(() => {
-        //     if (userAnswer === answer) {
-        //         setScore(score +1)}; 
+    const startGame = () => {
+      //Start Timer
+      setSeconds(10);
+      //Show question
 
-          //attempt 3
-          const [score, setScore] = useState(1);
-          useEffect(() => {
-              if(score < 10) {
-                  //setTimeout is wrong
-              score > 0 && setTimeout(() => setScore(score +1), 1000);
-              } else {
-                  setScore('game over')
-              }
-          }, [score]);  
+      //Score = 0
+    }
+
+  //10 secondCountDown
+  const [seconds, setSeconds] = useState('');
 
 
-    //Timer
-    const [counter, setCounter] = useState(10);
+  useEffect(() => {
+    if (seconds > 0) {
+      setTimeout(() => setSeconds(seconds - 1), 1000);
+    } else {
+      setSeconds('hello')
+    }
+  }, [seconds]);
+
+
+    //If you get all 10 points = you get this message (for now)
     useEffect(() => {
-        if(counter > 0) {
-        counter > 0 && setTimeout(() => setCounter(counter -1), 1000);
+      if(score > 10) {
+          setScore('Good Job!')
+      }
+  }, [score]); 
+ 
+    //OnSubmit check if correct or not in console and add points
+    const handleInput = () => {
+
+        console.log(userInput);
+
+        if (userInput == answer) {
+          console.log ("correct"); 
+          //add one point to score
+          setScore(score +1)
+          //reset timer (!!!THERE IS GLITCH!!!)
+          setSeconds('')
+          //change question
         } else {
-            setCounter('next question')
+          console.log ("incorrect");
+          //Print "try again"
         }
-    }, [counter]);  
+    };
+
+    
+
+
 
   return (
     <div className="App">
@@ -65,28 +73,35 @@ function Home() {
       </header>
         <br></br>
       <div>
-        <span id="timer" >Time: {counter} || </span>
-    
+        <span id="timer" >Time: {seconds} || </span>
         <span id="score">Score: {score}</span>
       </div>
         <br></br>
-      <Button 
-        /*
-        onClick={reset game} */
+      <Button
+        onClick={() => startGame()}
         variant="contained"
         className="btn btn-default" 
-        id="play">Start Game
+        >Start
       </Button>
         <br></br>
         <br></br>
-      <div className="game-container">
-        <span id="question">{num1} x {num2} = {answer}</span>
-        <form>
-        <TextField variant="outlined" id="answer" /*key={userAnswer}*/></TextField>
-        </form>
+      <div className="game-container" >
+        <span id="question" style={{display:"none"}}
+        // key={activeQ}
+        >
+          {/* {questions[activeQ].q} x {questions[activeQ].q2} =  */}
+          {RandomNumber} x {RandomNumber2} = 
+          </span>
+        <span id="answer" style={{display:"none"}}> {answer}</span>
+        <br></br>
+        <input onChange={e => setInput(e.target.value)}></input>
+
+        <button onClick={() => handleInput()}>submit</button>
       </div>
         <br></br>
-      <Button variant="contained">Restart</Button>
+      <Button 
+      //onclick
+      variant="contained">End</Button>
       
     </div>
   );
