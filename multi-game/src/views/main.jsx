@@ -8,6 +8,9 @@ import PlayCircleFilledWhiteTwoToneIcon from '@material-ui/icons/PlayCircleFille
 import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
 import AddRounded from '@material-ui/icons/AddRounded';
 import { green } from '@material-ui/core/colors';
+import { motion } from "framer-motion"
+import Confetti from "react-confetti";
+import useWindowSize from 'react-use/lib/useWindowSize'
 
 function Home() {
 
@@ -21,6 +24,7 @@ function Home() {
     const [secondParam, setSecondParam] = useState(random());
     const answer = firstParam * secondParam;
 
+    const {width, height} = useWindowSize();
 
     // Const [seconds, setSeconds] = useState(0);
     //10 secondCountDown
@@ -102,11 +106,14 @@ function Home() {
     //If you get all 10 points = you get this message and game ends
     useEffect(() => {
       if(score >= 10) {
-          setScore('You Won!')
+          setScore('YOU WON!')
           //end timer
           reset();
           //Hide questions and input
-          display()
+          display();
+          //start confetti
+          confettiDisplay()
+            
       }
   }, [score]); 
  
@@ -130,35 +137,55 @@ function Home() {
     const endGame = () => {
       setScore(0)
       display()
+      confettiDisplay()
+    }
+    
+    //CONFETTI FUNCTION !!!Change to start on call, instead of display
+      function confettiDisplay() {
+      const confettiDisplay = document.getElementById("confetti");
+      if (confettiDisplay.style.display === "none") {
+        confettiDisplay.style.display = "block";
+      } else {
+        confettiDisplay.style.display = "none";
+      }
     }
 
-    
+ 
   return (
-    <div className="App">
+    <div className="App" id="appConfetti">
+      
       <div className="App-header">
-        <header className="header">
+        <Confetti id="confetti" style={{display: "none"}}/>
+        <header 
+        className="header">
         Multiplication Game
         </header>
       
       <br></br>
 
-        <div className="timeScore">
-          <span className="time">Time: {seconds}s</span>
+        <motion.div 
+        className="timeScore">
+          <span 
+          className="time">Time: {seconds}s</span>
             <AddRounded fontSize="small"/>
           <span className="score">Score: {score} </span>
-        </div>
+        </motion.div>
       </div>
+
         <br></br>
+
       <div>
 
       </div>
         <br></br>
-        <Button
+        <motion.button
           onClick={() => {startGame(); toggle();}}
           className={`startBtn btn-primary btn-primary-${
             isActive ? "active" : "inactive"
           }`}
           className="startBtn btn-default" 
+          whileHover={{ scale: 2 }}
+          whileTap={{ scale: 2 }}
           > 
           {isActive ? 
           <PauseCircleFilledTwoToneIcon 
@@ -167,9 +194,12 @@ function Home() {
           <PlayCircleFilledWhiteTwoToneIcon 
           fontSize="large" 
           style={{ color: green[500] }}/>}
-        </Button>
+        </motion.button>
 
-        <div className="welcome" id="welcome" style={{display:"block"}}>
+        <motion.div 
+        className="welcome" 
+        id="welcome" 
+        style={{display:"block"}}>       
           <div className="welcomeText">
             Welcome to the multiplcation game!
             <br></br> 
@@ -182,10 +212,13 @@ function Home() {
             <br/>
             If you get 10 points you win! GOOD LUCK!
           </div>
-        </div>
+        </motion.div>
 
-      <div className="displayGame" id="displayGame" style={{display:"none"}}>
-          <div className="game-container">
+      <div 
+      className="displayGame" 
+      id="displayGame" 
+      style={{display:"none"}}>
+          <motion.div className="game-container" whileHover={{ scale: 1.23 }}>
             <span className="question" id="question" >
               {firstParam} x {secondParam} = __
             </span>
@@ -213,11 +246,11 @@ function Home() {
             <br></br>
             <br></br>
 
-            <Button 
-                onClick={() => {endGame(); reset();}}
+            <motion.button 
+                onClick={() => {endGame(); reset(); }}
                 > End Game
-            </Button>
-          </div>
+            </motion.button>
+          </motion.div>
       </div>
       
     </div>

@@ -27,12 +27,20 @@
 }
 
 .time, .score {
-  padding: 70px;
+  padding: 5px;
+  margin: 10px;
+  font-weight: bold;
+  border-radius: 5%;
+}
+
+.startBtn {
+  border: none;
+  margin-bottom: 50px;
+  background: none;
 }
 
 .welcome, .displayGame  {
   max-width: 550px;
-
   margin: auto;
   padding: 30px;
   font-family:'Times New Roman', Times, serif;
@@ -43,8 +51,7 @@
 	text-shadow: 1px 1px 5px rgba(0,0,0,.2);
 	border-radius: 3px;
 	border: 2px solid black;
-	box-shadow: inset 0 0 0 2px rgba(255,255,255,.3),
-							0 0 0 5px white,
+	box-shadow: inset 0 0 0 3px rgba(255,255,255,.3),
 							0 4px 10px rgba(0,0,0,.5);
 }
 
@@ -55,7 +62,6 @@
   height: fit-content;
   padding:15px;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,.3),
-  0 0 0 5px white,
   0 4px 10px rgba(0,0,0,.5);
 }
 
