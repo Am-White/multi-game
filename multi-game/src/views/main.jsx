@@ -8,7 +8,7 @@ import PlayCircleFilledWhiteTwoToneIcon from '@material-ui/icons/PlayCircleFille
 import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
 import AddRounded from '@material-ui/icons/AddRounded';
 import { green } from '@material-ui/core/colors';
-import { motion, useAnimation } from "framer-motion"
+import { motion} from "framer-motion"
 import Confetti from "react-dom-confetti";
 //import useWindowSize from 'react-use/lib/useWindowSize'
 
@@ -30,7 +30,7 @@ function Home() {
       const [seconds, setSeconds] = useState(10);
       const [isActive, setIsActive] = useState(false);
 
-      /////////////////////////////////////////////////////////////////////////////
+    //Confetti
       const [active, setActive] = useState(false);
         //CONFETTI FUNCTION !!!Change to start on call, instead of display
             // const {width, height} = useWindowSize();
