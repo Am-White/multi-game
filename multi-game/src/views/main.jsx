@@ -1,92 +1,224 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect} from 'react';
 import './main.css';
 import {
     Button,
-    TextField
+    TextField,
 } from '@material-ui/core'
+import PlayCircleFilledWhiteTwoToneIcon from '@material-ui/icons/PlayCircleFilledWhiteTwoTone';
+import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
+import AddRounded from '@material-ui/icons/AddRounded';
+import { green } from '@material-ui/core/colors';
 
 function Home() {
-    //Generate 2 numbers between 1-10
-    function getRandomInt1(max) {
-        return Math.floor(Math.random() * max);
+
+    const [userInput, setUserInput] = useState("");
+
+    const [score, setScore] = useState(0);
+    const [hasWon, setHasWon] = useState(false);
+
+    const random = () => (Math.floor(Math.random() * 10) + 1);
+    const [firstParam, setFirstParam] = useState(random());
+    const [secondParam, setSecondParam] = useState(random());
+    const answer = firstParam * secondParam;
+
+
+    // Const [seconds, setSeconds] = useState(0);
+    //10 secondCountDown
+/////////////////////////////////////////////////////////////////////////////
+      const [seconds, setSeconds] = useState(10);
+      const [isActive, setIsActive] = useState(false);
+
+      function toggle() {
+        setIsActive(!isActive);
       }
-      function getRandomInt2(max) {
-        return Math.floor(Math.random() * max);
+      //Resets
+      function reset() {
+        setSeconds(10);
+        setIsActive(false);
       }
-    const num1 = getRandomInt1(10);
-    const num2 = getRandomInt2(10);
-    const answer = num1 * num2;
 
-    // If input === num1 * num2 then add +1 to score
-
-    //Score
-    // const userAnswer = [];
-     //const score = [];
-    //attempt 1
-    // function input (userAnswer, score) {
-    //     if (userAnswer === answer) {
-    //         return { score: +1
-    //         }
-    //     }
-    // }
-
-        //attempt 2
-        // const [score, setScore] = useState(1);
-        // useEffect(() => {
-        //     if (userAnswer === answer) {
-        //         setScore(score +1)}; 
-
-          //attempt 3
-          const [score, setScore] = useState(1);
-          useEffect(() => {
-              if(score < 10) {
-                  //setTimeout is wrong
-              score > 0 && setTimeout(() => setScore(score +1), 1000);
-              } else {
-                  setScore('game over')
-              }
-          }, [score]);  
-
-
-    //Timer
-    const [counter, setCounter] = useState(10);
-    useEffect(() => {
-        if(counter > 0) {
-        counter > 0 && setTimeout(() => setCounter(counter -1), 1000);
-        } else {
-            setCounter('next question')
+      useEffect(() => {
+        let interval = null;
+        if (isActive) {
+          interval = setInterval(() => {
+            setSeconds((seconds) => seconds - 1);
+          }, 1000);
+        } else if (!isActive && seconds !== 0) {
+          clearInterval(interval);
         }
-    }, [counter]);  
+        return () => clearInterval(interval);
+      }, [isActive, seconds]);
 
+      useEffect(() => {
+        if (seconds === 0) {
+          setFirstParam(random());
+          setSecondParam(random());
+          reset();
+          setIsActive(true);
+        }
+      }, [seconds])
+
+
+/////////////////////////////////////////////////////////////////////////////
+    //Start Game function
+    const startGame = () => {
+      //Show question
+      display()
+    }
+
+    //function to display content on start
+    //USEREF?
+    function display() {
+      const showDisplay = document.getElementById("displayGame");
+      const showWelcome = document.getElementById("welcome");
+      if (showDisplay.style.display === "none") {
+        showDisplay.style.display = "block";
+        showWelcome.style.display = "none";
+      } else {
+        showDisplay.style.display = "none";
+        showWelcome.style.display = "block";
+      }
+    }
+
+  //Checks if correct and refreshes question if true
+    useEffect(() => {
+      if(answer === userInput && !!answer) {
+        //NEEDS TO clear input
+        clearInterval(userInput)
+        //shows correct answer
+        setHasWon(true)
+      }
+      if (hasWon) {
+        //resets question if true
+        setFirstParam(random())
+        setSecondParam(random())
+        setHasWon(false)
+        //Resets timer if true and starts
+        reset();
+        setIsActive(true);
+      }
+    }, [hasWon, userInput, answer ])
+
+    //If you get all 10 points = you get this message and game ends
+    useEffect(() => {
+      if(score >= 10) {
+          setScore('You Won!')
+          //end timer
+          reset();
+          //Hide questions and input
+          display()
+      }
+  }, [score]); 
+ 
+    //OnSubmit check if correct or not in console and add points
+    const handleInput = () => {
+
+        if (userInput == answer) {
+          console.log(answer, userInput,);
+          console.log ("correct"); 
+          //add one point to score
+          setScore(score +1)
+          //Sets haswon
+          setHasWon(true)
+        } else {
+          console.log(answer, userInput, hasWon);
+          console.log ("incorrect");
+        }
+    };
+
+    //End game button
+    const endGame = () => {
+      setScore(0)
+      display()
+    }
+
+    
   return (
     <div className="App">
-      <header className="App-header">
-       Multiplication Game
-      </header>
+      <div className="App-header">
+        <header className="header">
+        Multiplication Game
+        </header>
+      
+      <br></br>
+
+        <div className="timeScore">
+          <span className="time">Time: {seconds}s</span>
+            <AddRounded fontSize="small"/>
+          <span className="score">Score: {score} </span>
+        </div>
+      </div>
         <br></br>
       <div>
-        <span id="timer" >Time: {counter} || </span>
-    
-        <span id="score">Score: {score}</span>
+
       </div>
         <br></br>
-      <Button 
-        /*
-        onClick={reset game} */
-        variant="contained"
-        className="btn btn-default" 
-        id="play">Start Game
-      </Button>
-        <br></br>
-        <br></br>
-      <div className="game-container">
-        <span id="question">{num1} x {num2} = {answer}</span>
-        <form>
-        <TextField variant="outlined" id="answer" /*key={userAnswer}*/></TextField>
-        </form>
+        <Button
+          onClick={() => {startGame(); toggle();}}
+          className={`startBtn btn-primary btn-primary-${
+            isActive ? "active" : "inactive"
+          }`}
+          className="startBtn btn-default" 
+          > 
+          {isActive ? 
+          <PauseCircleFilledTwoToneIcon 
+          fontSize="large"/>
+           : 
+          <PlayCircleFilledWhiteTwoToneIcon 
+          fontSize="large" 
+          style={{ color: green[500] }}/>}
+        </Button>
+
+        <div className="welcome" id="welcome" style={{display:"block"}}>
+          <div className="welcomeText">
+            Welcome to the multiplcation game!
+            <br></br> 
+            <br></br>
+            Answer as many questions
+            <br/>
+            as you can, you will have 10 seconds for each question.
+            <br/>
+            You can pause and resume whenever.
+            <br/>
+            If you get 10 points you win! GOOD LUCK!
+          </div>
+        </div>
+
+      <div className="displayGame" id="displayGame" style={{display:"none"}}>
+          <div className="game-container">
+            <span className="question" id="question" >
+              {firstParam} x {secondParam} = __
+            </span>
+
+            <br></br>
+            <br></br>
+
+            <TextField 
+              className="input"
+              onChange={e => setUserInput(e.target.value)}
+              variant="outlined"
+              label="Answer"/>
+
+            <br></br>
+
+            <Button 
+              className="submit"
+              onClick={() => handleInput()}
+              variant="outlined"
+              color="primary"
+              >Submit Answer
+            </Button>
+
+            <br></br>
+            <br></br>
+            <br></br>
+
+            <Button 
+                onClick={() => {endGame(); reset();}}
+                > End Game
+            </Button>
+          </div>
       </div>
-        <br></br>
-      <Button variant="contained">Restart</Button>
       
     </div>
   );
