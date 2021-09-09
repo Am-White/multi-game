@@ -20,10 +20,18 @@
   text-shadow: 2px 2px 5px rgba(0,0,0,.2);
 }
 
+.functionDiv {
+  margin:auto;
+  padding: 30px;
+  width: 550px;
+  height: 35px;
+}
+
 .timeScore {
-  font-size: 15px;
+  font-size: 25px;
   text-shadow: 1px 1px 5px rgba(0,0,0,.2);
-  color: #8eeee9;
+  color: #5cc7c2;
+  float: left;
 }
 
 .time, .score {
@@ -33,10 +41,11 @@
   border-radius: 5%;
 }
 
+
 .startBtn {
   border: none;
-  margin-bottom: 50px;
   background: none;
+  float: right;
 }
 
 .welcome, .displayGame  {
@@ -46,10 +55,10 @@
   font-family:'Times New Roman', Times, serif;
   font-weight: bold;
   font-size: 20px;
-	background-image: linear-gradient(#3eb8b2, #8eeee9);
+	background: rgb(70, 223, 223);
   display: inline-block;
 	text-shadow: 1px 1px 5px rgba(0,0,0,.2);
-	border-radius: 3px;
+	border-radius: 15px;
 	border: 2px solid black;
 	box-shadow: inset 0 0 0 3px rgba(255,255,255,.3),
 							0 4px 10px rgba(0,0,0,.5);
@@ -63,6 +72,7 @@
   padding:15px;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,.3),
   0 4px 10px rgba(0,0,0,.5);
+  border-radius: 15px;
 }
 
 .question {
@@ -76,4 +86,14 @@
 .submit {
   width: 200px;
 }
+
+
+.confetti-button {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  max-width: 20px;
+  padding: 6px 8px;
+}
+
 

@@ -8,9 +8,10 @@ import PlayCircleFilledWhiteTwoToneIcon from '@material-ui/icons/PlayCircleFille
 import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
 import AddRounded from '@material-ui/icons/AddRounded';
 import { green } from '@material-ui/core/colors';
-import { motion } from "framer-motion"
-import Confetti from "react-confetti";
-import useWindowSize from 'react-use/lib/useWindowSize'
+import { motion, useAnimation } from "framer-motion"
+import Confetti from "react-dom-confetti";
+//import useWindowSize from 'react-use/lib/useWindowSize'
+
 
 function Home() {
 
@@ -24,13 +25,19 @@ function Home() {
     const [secondParam, setSecondParam] = useState(random());
     const answer = firstParam * secondParam;
 
-    const {width, height} = useWindowSize();
-
     // Const [seconds, setSeconds] = useState(0);
     //10 secondCountDown
-/////////////////////////////////////////////////////////////////////////////
       const [seconds, setSeconds] = useState(10);
       const [isActive, setIsActive] = useState(false);
+
+      /////////////////////////////////////////////////////////////////////////////
+      const [active, setActive] = useState(false);
+        //CONFETTI FUNCTION !!!Change to start on call, instead of display
+            // const {width, height} = useWindowSize();
+            function confetti() {
+              setActive(true)
+            }
+
 
       function toggle() {
         setIsActive(!isActive);
@@ -39,6 +46,7 @@ function Home() {
       function reset() {
         setSeconds(10);
         setIsActive(false);
+        setActive(false);
       }
 
       useEffect(() => {
@@ -58,12 +66,10 @@ function Home() {
           setFirstParam(random());
           setSecondParam(random());
           reset();
-          setIsActive(true);
+          confetti();
         }
       }, [seconds])
 
-
-/////////////////////////////////////////////////////////////////////////////
     //Start Game function
     const startGame = () => {
       //Show question
@@ -84,6 +90,8 @@ function Home() {
       }
     }
 
+ 
+/////////////////////////////////////////////////////////////////////////////
   //Checks if correct and refreshes question if true
     useEffect(() => {
       if(answer === userInput && !!answer) {
@@ -99,21 +107,19 @@ function Home() {
         setHasWon(false)
         //Resets timer if true and starts
         reset();
-        setIsActive(true);
       }
     }, [hasWon, userInput, answer ])
 
     //If you get all 10 points = you get this message and game ends
     useEffect(() => {
-      if(score >= 10) {
-          setScore('YOU WON!')
+      if(score >= 2) {
+          setScore(0)
           //end timer
           reset();
           //Hide questions and input
           display();
           //start confetti
-          confettiDisplay()
-            
+          setActive(true);
       }
   }, [score]); 
  
@@ -137,39 +143,19 @@ function Home() {
     const endGame = () => {
       setScore(0)
       display()
-      confettiDisplay()
     }
-    
-    //CONFETTI FUNCTION !!!Change to start on call, instead of display
-      function confettiDisplay() {
-      const confettiDisplay = document.getElementById("confetti");
-      if (confettiDisplay.style.display === "none") {
-        confettiDisplay.style.display = "block";
-      } else {
-        confettiDisplay.style.display = "none";
-      }
-    }
+///////////////////////////////////////////////////////////
 
- 
   return (
-    <div className="App" id="appConfetti">
-      
+    <motion.div className="App">
+     
       <div className="App-header">
-        <Confetti id="confetti" style={{display: "none"}}/>
-        <header 
-        className="header">
+
+        <header className="header">
         Multiplication Game
         </header>
       
       <br></br>
-
-        <motion.div 
-        className="timeScore">
-          <span 
-          className="time">Time: {seconds}s</span>
-            <AddRounded fontSize="small"/>
-          <span className="score">Score: {score} </span>
-        </motion.div>
       </div>
 
         <br></br>
@@ -177,13 +163,24 @@ function Home() {
       <div>
 
       </div>
-        <br></br>
+
+        <motion.div className="functionDiv">
+
+        <div className="timeScore">
+          <span className="time">Time: {seconds}s</span>
+            <AddRounded fontSize="small"/>
+          <span className="score">Score: {score} </span>
+        </div>
+
+          <div className="confetti-button">
+            <Confetti active={active} />
+          </div>
+        
         <motion.button
           onClick={() => {startGame(); toggle();}}
           className={`startBtn btn-primary btn-primary-${
             isActive ? "active" : "inactive"
-          }`}
-          className="startBtn btn-default" 
+          }`}        
           whileHover={{ scale: 2 }}
           whileTap={{ scale: 2 }}
           > 
@@ -195,6 +192,7 @@ function Home() {
           fontSize="large" 
           style={{ color: green[500] }}/>}
         </motion.button>
+        </motion.div>
 
         <motion.div 
         className="welcome" 
@@ -218,7 +216,7 @@ function Home() {
       className="displayGame" 
       id="displayGame" 
       style={{display:"none"}}>
-          <motion.div className="game-container" whileHover={{ scale: 1.23 }}>
+          <motion.div className="game-container" whileHover={{ scale: 1.23, width: 465, height: 228}}>
             <span className="question" id="question" >
               {firstParam} x {secondParam} = __
             </span>
@@ -244,16 +242,23 @@ function Home() {
 
             <br></br>
             <br></br>
-            <br></br>
-
-            <motion.button 
+            
+            <Button variant="text">
+              <motion.p
+                className="endBtn"
+                animate={{color: ["#000", "#ff2323", "#000"]}}
+                transition={{ duration: 4, repeat: Infinity }}
                 onClick={() => {endGame(); reset(); }}
                 > End Game
-            </motion.button>
-          </motion.div>
+              </motion.p>
+            </Button>
+
+            
+        </motion.div> 
       </div>
-      
-    </div>
+        <br></br>
+        
+    </motion.div>
   );
 }
 
