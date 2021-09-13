@@ -25,6 +25,7 @@
   padding: 30px;
   width: 550px;
   height: 35px;
+  
 }
 
 .timeScore {
@@ -32,6 +33,7 @@
   text-shadow: 1px 1px 5px rgba(0,0,0,.2);
   color: #5cc7c2;
   float: left;
+  
 }
 
 .time, .score {
