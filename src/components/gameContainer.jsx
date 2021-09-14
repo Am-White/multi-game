@@ -5,6 +5,7 @@ import Confetti from "react-dom-confetti";
 import StartButton from "./startBtn";
 import Display from "./display";
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 
 function GameContainer() {
   const [userInput, setUserInput] = useState("");
@@ -26,6 +27,14 @@ function GameContainer() {
 
   // console.log({seconds, isActive});
 
+  const [currentGameId, setCurrentGameId] = useState(uuidv4())
+
+  useEffect(() => {
+    if(hasWon) {
+      setCurrentGameId(uuidv4())
+    }
+  }, [currentGameId, hasWon])
+
   const [active, setActive] = useState(false);
   //CONFETTI FUNCTION !!!Change to start on call, instead of display
   // const {width, height} = useWindowSize();
@@ -38,59 +47,60 @@ function GameContainer() {
   }
 
   /////////////////////////////////////////////////////////
-  const [winInformation, setWinInformation] = useState([])
+  const [games, setGames] = useState([])
+  
+  function createGame() {
+    const calender = moment().format('lll');
 
-
-  function addWin() {
-    const calender = moment().format('MMMM Do YYYY, h:mm:ss a');
-
-
-    const winInfo = {
+    const game = {
+      id: currentGameId,
       didWin: true,
       time: calender,
     }
-    setWinInformation([winInfo, ...winInformation])
+    setGames([game, ...games])
   }
 
-  function addLoss() {
-    const calender = moment().format('MMMM Do YYYY, h:mm:ss a');
+  function createLoss(gameId) {
+    const calender = moment().format('lll');
 
-
-    const winInfo = {
+    const game = {
+      id: currentGameId,
       didWin: false,
       time: calender,
     }
-    setWinInformation([winInfo, ...winInformation])
-    
+    setGames([game, ...games])
   }
+
+  console.log({games});
   // setGameHistory([that, ...gameHistory])
+  ////////////////////////////////////////////////////////
+  const [checkAnswers, setCheckAnswers] = useState([])
 
-  const [checkIfCorrect, setCheckIfCorrect] = useState([])
-
-  function checkCorrect() {
+  function checkCorrect(gameId) {
     const calender = moment().format('lll');
 
-
-    const winInfo = {
+    const answer = {
+      //id,
+      gameId,
       wasCorrect: true,
       userInput: userInput,
       time: calender,
     }
-    setCheckIfCorrect([winInfo, ...checkIfCorrect])
+    setCheckAnswers([answer, ...checkAnswers])
   }
 
-  function checkFalse() {
+  function checkFalse(gameId) {
     const calender = moment().format('lll');
 
-
-    const winInfo = {
+    const answer = {
+      gameId: currentGameId,
       wasCorrect: false,
       userInput: userInput,
       time: calender,
     }
-    setCheckIfCorrect([winInfo, ...checkIfCorrect])
-    
+    setCheckAnswers([answer, ...checkAnswers])
   }
+  console.log({checkAnswers});
 
 
   //Resets
@@ -117,7 +127,7 @@ function GameContainer() {
       setFirstParam(random());
       setSecondParam(random());
       reset();
-      addLoss();
+      createLoss();
       setScore(0);
     }
   }, [seconds]);
@@ -170,12 +180,12 @@ function GameContainer() {
       endGame()
       //start confetti
       setActive(true);
-      addWin();
+      createGame();
       confetti();
 
 
     }
-  }, [score, addWin]);
+  }, [score, createGame]);
 
   //console.log({winInformation})
 
@@ -189,11 +199,10 @@ function GameContainer() {
       //Sets haswon
       setHasWon(true);
       //If correct- print
-      checkCorrect();
+      checkCorrect(currentGameId);
     } else {
       console.log(answer, userInput, hasWon);
       console.log("incorrect");
-      addLoss();
       checkFalse();
     }
     callback();
@@ -258,8 +267,8 @@ function GameContainer() {
         Your Wins:
         </div>
         <ul>
-          {winInformation.map((winInformation) => (
-          <li>{JSON.stringify(winInformation)}</li>
+          {games.map((games) => (
+          <li>{JSON.stringify(games)}</li>
           ))}
         </ul>
       </div>
@@ -273,8 +282,8 @@ function GameContainer() {
           Your Answers:
         </div>
         <ul>
-          {checkIfCorrect.map((checkIfCorrect) => (
-          <li>{JSON.stringify(checkIfCorrect)}</li>
+          {checkAnswers.map((checkAnswers) => (
+          <li>{JSON.stringify(checkAnswers)}</li>
           ))}
         </ul>
       </div>
