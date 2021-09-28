@@ -6,6 +6,7 @@ import StartButton from "./startBtn";
 import Display from "./display";
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import {getGames, getAnswers} from '../api/index.js'
 
 function GameContainer() {
   const [userInput, setUserInput] = useState("");
@@ -60,6 +61,17 @@ function GameContainer() {
     setGames([game, ...games])
   }
 
+  async function pullGames() {
+
+    const games = await getGames();
+    setGames(games);
+  }
+
+  useEffect(() => {
+    pullGames();
+  }, [ ]);
+
+
   function createLoss(gameId) {
     const calender = moment().format('lll');
 
@@ -88,6 +100,17 @@ function GameContainer() {
     }
     setCheckAnswers([answer, ...checkAnswers])
   }
+
+  async function pullAnswers() {
+
+    const answers = await getAnswers();
+    setCheckAnswers(answers);
+    }
+
+  useEffect(() => {
+    pullAnswers();
+  }, [ ]);
+
 
   function checkFalse(gameId) {
     const calender = moment().format('lll');

@@ -8,8 +8,12 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "framer-motion": "^4.1.17",
     "moment": "^2.29.1",
+    "mongodb": "^4.1.2",
+    "node": "^16.9.1",
     "prettier": "^2.4.0",
     "react": "^17.0.2",
     "react-confetti": "^6.0.1",
@@ -43,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
